@@ -15,12 +15,12 @@ O sistema é modularizado em **classes** e arquivos separados para fácil manute
 ## 2. Estrutura de Arquivos
 
 reconhecimento_project/
-│
--├── reconhecimento_head.py  # Classe para gerenciar banco e configurações
--├── reconhecimento_face.py  # Classe para cadastro e reconhecimento
--├── main.py                 # Menu principal para executar o programa
--├── faces/                  # Pasta para armazenar fotos
--└── requirements.txt        # Bibliotecas necessárias
+-   │
+-   ├── reconhecimento_head.py  # Classe para gerenciar banco e configurações
+-   ├── reconhecimento_face.py  # Classe para cadastro e reconhecimento
+-   ├── main.py                 # Menu principal para executar o programa
+-   ├── faces/                  # Pasta para armazenar fotos
+-   └── requirements.txt        # Bibliotecas necessárias
 
 
 ---
