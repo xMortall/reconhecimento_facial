@@ -8,7 +8,7 @@ class ReconhecimentoHead:
 
     def __init__(self, base_dir="faces"):
         # ---------------- Diretórios e banco ----------------
-        self.BASE_DIR = base_dir  # Pasta base onde todas as fotos serão salvas
+        self.BASE_DIR = base_dir                  # Pasta base onde todas as fotos serão salvas
         os.makedirs(self.BASE_DIR, exist_ok=True)
 
         self.DB_FILE = os.path.join(self.BASE_DIR, "data.json")  # Arquivo JSON para guardar informações

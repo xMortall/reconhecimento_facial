@@ -20,10 +20,11 @@ class ReconhecimentoFace:
         Captura fotos da pessoa, incluindo variações de ângulo e flip horizontal,
         para melhorar o reconhecimento quando ela olha para os lados.
         """
-        cap = cv2.VideoCapture(0)
-        pasta_fotos = os.path.join(self.BASE_DIR, nome)
+        cap = cv2.VideoCapture(0)   #Abre a câmera
+        pasta_fotos = os.path.join(self.BASE_DIR, nome) #Cria pasta
         os.makedirs(pasta_fotos, exist_ok=True)
 
+        # Conta quantas fotos já existem na pasta
         fotos_existentes = len([f for f in os.listdir(pasta_fotos) if f.endswith(".jpg")])
         limite_fotos = fotos_existentes + self.head.fotos_por_vez
         fotos = fotos_existentes
@@ -57,7 +58,7 @@ class ReconhecimentoFace:
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
             cv2.imshow("Cadastro", frame)
 
-            if cv2.waitKey(1) & 0xFF == ord("q"):
+            if cv2.waitKey(1) & 0xFF == ord("q"):   #Aperta q para sair
                 break
 
         cap.release()
@@ -74,11 +75,12 @@ class ReconhecimentoFace:
         Treina o reconhecedor LBPH usando todas as fotos cadastradas.
         Retorna o recognizer e o dicionário de labels.
         """
-        faces = []
-        labels = []
-        label_dict = {}
-        current_label = 0
+        faces = []          # Lista de imagens de rosto
+        labels = []         # Lista de pessoas correspondentes a cada rosto
+        label_dict = {}     # Dicionário para mapear nomes a pessoas numéricas
+        current_label = 0   # Contador de pessoas
 
+        # Carrega todas as fotos do banco
         for nome in self.banco:
             pasta_fotos = os.path.join(self.BASE_DIR, nome)
             arquivos = [f for f in os.listdir(pasta_fotos) if f.endswith(".jpg")]
@@ -93,9 +95,9 @@ class ReconhecimentoFace:
         if len(faces) == 0:
             return None, None
 
-        recognizer = cv2.face.LBPHFaceRecognizer_create()
-        recognizer.train(faces, np.array(labels))
-        return recognizer, {v: k for k, v in label_dict.items()}
+        recognizer = cv2.face.LBPHFaceRecognizer_create()       # Cria o reconhecedor LBPH
+        recognizer.train(faces, np.array(labels))               # Treina com as faces e pessoas
+        return recognizer, {v: k for k, v in label_dict.items()} 
 
     # ---------------- Reconhecimento ----------------
     def reconhecer(self):
@@ -111,26 +113,29 @@ class ReconhecimentoFace:
         cap = cv2.VideoCapture(0)
         print(">>> Pressione Q para sair do reconhecimento.")
 
+        # Loop de captura
         while True:
             ret, frame = cap.read()
             if not ret:
                 break
 
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            rostos = self.face_cascade.detectMultiScale(
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Converte para escala de cinza
+            rostos = self.face_cascade.detectMultiScale(   # Coloca quadrado em volta do rosto
                 gray, scaleFactor=1.2, minNeighbors=5
             )
 
+            # Para cada rosto detectado, tenta reconhecer
             for (x, y, w, h) in rostos:
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-                rosto = gray[y:y+h, x:x+w]
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2) # Desenha retângulo
+                rosto = gray[y:y+h, x:x+w]                               # Recorta o rosto
                 try:
-                    label, conf = recognizer.predict(rosto)
-                    nome = label_reverse[label]
-                    idade = self.banco[nome]["idade"]
-                    texto = f"{nome}, {idade} anos" if idade else nome
+                    label, conf = recognizer.predict(rosto)             # Reconhece o rosto
+                    nome = label_reverse[label]                         # Obtém o nome
+                    idade = self.banco[nome]["idade"]                   # Obtém a idade
+                    texto = f"{nome}, {idade} anos" if idade else nome  # Formata o texto
                 except:
                     texto = "Desconhecido"
+                # Escreve o nome acima do rosto
                 cv2.putText(frame, texto, (x, y-10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
 
