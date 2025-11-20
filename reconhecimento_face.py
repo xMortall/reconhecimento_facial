@@ -129,10 +129,13 @@ class ReconhecimentoFace:
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2) # Desenha retângulo
                 rosto = gray[y:y+h, x:x+w]                               # Recorta o rosto
                 try:
-                    label, conf = recognizer.predict(rosto)             # Reconhece o rosto
-                    nome = label_reverse[label]                         # Obtém o nome
-                    idade = self.banco[nome]["idade"]                   # Obtém a idade
-                    texto = f"{nome}, {idade} anos" if idade else nome  # Formata o texto
+                    label, conf = recognizer.predict(rosto)
+                    if conf > 70:  # limite para considerar desconhecido
+                        texto = "Desconhecido"
+                    else:
+                        nome = label_reverse[label]
+                        idade = self.banco[nome]["idade"]
+                        texto = f"{nome}, {idade} anos" if idade else nome
                 except:
                     texto = "Desconhecido"
                 # Escreve o nome acima do rosto
