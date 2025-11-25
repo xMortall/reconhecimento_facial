@@ -43,7 +43,7 @@ class ReconhecimentoFace:
                 minNeighbors=self.head.minNeighbors,
                 minSize=self.head.minSize
             )
-
+            # cria retangulo em volta do rosto e salva a foto
             for (x, y, w, h) in rostos:
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
                 rosto = gray[y:y+h, x:x+w]
@@ -95,7 +95,7 @@ class ReconhecimentoFace:
         if len(faces) == 0:
             return None, None
 
-        recognizer = cv2.face.LBPHFaceRecognizer_create()       # Cria o reconhecedor LBPH
+        recognizer = cv2.face.LBPHFaceRecognizer_create()       # Cria o reconhecedor LBPH (Local Binary Patterns Histogram)
         recognizer.train(faces, np.array(labels))               # Treina com as faces e pessoas
         return recognizer, {v: k for k, v in label_dict.items()} 
 
@@ -141,7 +141,7 @@ class ReconhecimentoFace:
                 # Escreve o nome acima do rosto
                 cv2.putText(frame, texto, (x, y-10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
-
+ 
             cv2.imshow("Reconhecimento", frame)
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 break

@@ -19,7 +19,7 @@ class ReconhecimentoHead:
             self.banco = {}  # Inicializa banco vazio
 
         # ---------------- Classificador de rosto ----------------
-        # Cascade do OpenCV para detectar rostos
+        # Cascade do OpenCV para detectar rostos pré treinado
         self.face_cascade = cv2.CascadeClassifier(
             cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
         )
